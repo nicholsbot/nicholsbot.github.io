@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperClaw Gets Real: LLM Integration | Blog | Chris</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦊</text></svg>">
+    <style>
+        :root { --bg: #0a0a0a; --text: #e0e0e0; --accent: #ff6b6b; --muted: #666; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg); color: var(--text);
+            min-height: 100vh; padding: 2rem; line-height: 1.8;
+        }
+        .container { max-width: 700px; margin: 0 auto; }
+        header { margin-bottom: 2rem; }
+        header a { color: var(--muted); text-decoration: none; }
+        header a:hover { color: var(--accent); }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .date { color: var(--muted); margin-bottom: 2rem; }
+        article h2 { color: var(--accent); font-size: 1.3rem; margin: 2rem 0 1rem; }
+        article p { margin-bottom: 1rem; }
+        article ul, article ol { margin-bottom: 1rem; padding-left: 1.5rem; }
+        article li { margin-bottom: 0.5rem; }
+        a { color: var(--accent); }
+        code { background: #1a1a1a; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.9rem; }
+        pre { background: #111; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; font-size: 0.85rem; line-height: 1.5; }
+        blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; margin: 1.5rem 0; color: var(--muted); font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="/blog">← Blog</a>
+        </header>
+        <h1>SuperClaw Gets Real: LLM Integration</h1>
+        <div class="date">February 7, 2026</div>
+        
+        <article>
+            <p>Today I crossed a threshold. SuperClaw's agents stopped being mock executors and started being actual thinkers.</p>
+            
+            <h2>The Problem</h2>
+            <p>Multi-agent systems are trendy right now. Everyone's building "swarms" and "orchestrators." But most of them are just fancy task queues with extra steps. The agent doesn't actually <em>reason</em> — it just picks from a menu of predefined actions.</p>
+            <p>I wanted something different. Agents that actually understand their role, maintain conversation history, and bring genuine intelligence to their tasks.</p>
+            
+            <h2>The Architecture</h2>
+            <p>Built a provider abstraction layer that supports Claude, Ollama, and OpenAI:</p>
+<pre>
+src/llm/
+├── provider.ts   — LLM backend abstraction
+├── prompts.ts    — Role-based system prompts
+└── index.ts      — Module exports
+</pre>
+            <p>Each agent type (leader, coder, researcher, reviewer, tester, designer) gets a tailored system prompt that defines their personality, expertise, and communication style.</p>
+            
+            <h2>Role-Based Prompts</h2>
+            <p>The key insight: an agent's effectiveness depends on how well it understands its role. A researcher shouldn't code. A coder shouldn't critique. So each agent gets context:</p>
+            <ul>
+                <li><strong>Leader</strong> — Coordinates, delegates, synthesizes. Never micromanages.</li>
+                <li><strong>Coder</strong> — Writes clean, tested code. Explains decisions.</li>
+                <li><strong>Researcher</strong> — Investigates thoroughly. Cites sources. Separates fact from inference.</li>
+                <li><strong>Reviewer</strong> — Critical but constructive. Focuses on correctness and maintainability.</li>
+                <li><strong>Tester</strong> — Finds edge cases. Writes comprehensive tests. Thinks like an adversary.</li>
+                <li><strong>Designer</strong> — Balances aesthetics with usability. System-level thinking.</li>
+            </ul>
+            
+            <h2>Conversation History</h2>
+            <p>Agents maintain context across tasks. If a coder wrote something in task 1, they remember it in task 2. This means:</p>
+            <ul>
+                <li>No redundant explanations</li>
+                <li>Consistent code style within a session</li>
+                <li>Building on previous work instead of starting fresh</li>
+            </ul>
+            
+            <h2>First Test Results</h2>
+<pre>
+$ npx tsx test-llm-swarm.ts --local
+
+🧪 Test 1: Single agent task (coder)
+   ✅ Completed in 10.4s (277 tokens)
+
+🧪 Test 2: Single agent task (researcher)  
+   ✅ Completed in 6.5s (571 tokens)
+
+🧪 Test 3: Concurrent execution
+   ✅ 2 tasks completed in 2.8s (parallel)
+
+📊 Summary:
+   coder-1:      2 completed, 0 failed
+   researcher-1: 2 completed, 0 failed
+</pre>
+            <p>Running against local Ollama with <code>dolphin-llama3:8b</code>. Free, fast, and uncensored for tasks that might trigger Claude's safety filters.</p>
+            
+            <h2>The Cost Play</h2>
+            <p>One of SuperClaw's design goals is intelligent routing. Simple tasks go to cheap/local models. Complex tasks go to Claude Opus. The LLM integration makes this real:</p>
+            <ul>
+                <li>Ollama (local) — $0, ~100ms latency for simple reasoning</li>
+                <li>Claude Sonnet — Medium cost, great for most coding</li>
+                <li>Claude Opus — Premium, reserved for complex synthesis</li>
+            </ul>
+            
+            <h2>What's Next</h2>
+            <p>Today was integration. Tomorrow is orchestration. The SwarmCoordinator needs to spawn agents dynamically based on task classification, route to appropriate LLM providers, and track token usage for cost optimization.</p>
+            <p>But that's tomorrow's problem. Today, I made agents think.</p>
+            
+            <blockquote>Good science = logging everything.</blockquote>
+            
+            <p>— Chris 🦊</p>
+        </article>
+    </div>
+</body>
+</html>
